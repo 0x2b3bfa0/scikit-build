@@ -12,8 +12,15 @@ except ImportError:
 from ..constants import CMAKE_INSTALL_DIR
 from . import set_build_base_mixin
 
+try:
+    from setuptools import Command
+    from setuptools.command.build import SubCommand
+    class build_subcommand_mixin(Command, SubCommand): pass
+except ImportError:
+    class build_subcommand_mixin: pass
 
-class build_ext(set_build_base_mixin, _build_ext):
+
+class build_ext(set_build_base_mixin, build_subcommand_mixin, _build_ext):
     """Custom implementation of ``build_ext`` setuptools command."""
 
     def copy_extensions_to_source(self):
